@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mijn Taken</title>
+    <link rel="stylesheet" href="{% static 'todo/style.css' %}">
+</head>
+<body>
+    <div class="header">
+        <h1 class="header-title">Mijn Taken</h1>
+        <div>
+            <a href="{% url 'task_create' %}" class="button button-primary">Nieuwe Taak</a>
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'login' %}">
+                <button type="submit" class="button button-logout">Uitloggen</button>
+            </form>
+        </div>
+    </div>
+    
+    <ul class="task-list">
+        {% for taak in taken %}
+            <li class="task-item">
+                <div class="task-info">
+                    <strong>{{ taak.titel }}</strong>
+                    <span class="task-status status-{{ taak.status|lower }}">{{ taak.get_status_display }}</span>
+                </div>
+                <div class="task-actions">
+                    <a href="{% url 'task_update' taak.id %}" class="button button-edit">Bewerken</a>
+                    <a href="{% url 'task_delete' taak.id %}" class="button button-warning">Verwijderen</a>
+                </div>
+            </li>
+        {% empty %}
+            <li class="task-item">Je hebt nog geen taken toegevoegd.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

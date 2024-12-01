@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if taak %}Bewerk Taak{% else %}Nieuwe Taak{% endif %}</title>
+    <link rel="stylesheet" href="{% static 'todo/style.css' %}">
+</head>
+<body>
+    <h1>{% if taak %}Bewerk Taak{% else %}Nieuwe Taak{% endif %}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="titel">Titel:</label>
+            <input type="text" name="titel" value="{{ taak.titel|default:'' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="beschrijving">Beschrijving:</label>
+            <textarea name="beschrijving">{{ taak.beschrijving|default:'' }}</textarea>
+        </div>
+        
+        {% if taak %}
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select name="status">
+                <option value="TODO" {% if taak.status == "TODO" %}selected{% endif %}>To Do</option>
+                <option value="INPR" {% if taak.status == "INPR" %}selected{% endif %}>In Progress</option>
+                <option value="DONE" {% if taak.status == "DONE" %}selected{% endif %}>Done</option>
+            </select>
+        </div>
+        {% endif %}
+        
+        <button type="submit" class="button button-primary">Opslaan</button>
+        <a href="{% url 'task_list' %}" class="button">Annuleren</a>
+    </form>
+</body>
+</html>
